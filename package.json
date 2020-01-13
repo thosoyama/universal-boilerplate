@@ -1,0 +1,24 @@
+{
+  "name": "universal-boilerplate",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "yarn dev:server & yarn dev:client",
+    "dev:server": "yarn workspace server dev",
+    "dev:client": "yarn workspace client dev",
+    "build": "yarn build:server & yarn build:client",
+    "build:server": "yarn workspace server build",
+    "build:client": "yarn workspace client build",
+    "lint": "yarn lint:server && yarn lint:client",
+    "lint:server": "yarn workspace server lint",
+    "lint:client": "yarn workspace client lint",
+    "tsc": "yarn tsc:server && yarn tsc:client",
+    "tsc:server": "yarn workspace server tsc",
+    "tsc:client": "yarn workspace client tsc",
+    "codegen": "yarn codegen:server && yarn codegen:client",
+    "codegen:server": "yarn workspace server codegen",
+    "codegen:client": "yarn workspace client codegen"
+  }
+}

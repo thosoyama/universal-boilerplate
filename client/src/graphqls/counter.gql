@@ -1,0 +1,13 @@
+query getCounter($id: ID!) {
+  counter(id: $id) {
+    id
+    count
+  }
+}
+
+mutation setCounter($id: ID!, $count: Int!) {
+  counter(id: $id, count: $count) {
+    id
+    count
+  }
+}
