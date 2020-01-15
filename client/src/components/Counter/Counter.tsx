@@ -1,21 +1,36 @@
-import React from "react"
+import { useMutation } from "@apollo/react-hooks"
+import React, { memo, useCallback, useEffect } from "react"
 import styled from "styled-components"
-import { actions, useCounterContext } from "~/contexts/CounterContext"
+import { SetCounterDocument, SetCounterMutation } from "~/@types/Graphql"
+import { consoleLog, fetchStart, useCounterContext } from "~/contexts/CounterContext"
 
-export const Counter: React.FC = () => {
-  const [{ count, initialized }, dispatch] = useCounterContext()
+// eslint-disable-next-line react/display-name
+export const Counter: React.FC = memo(() => {
+  const [{ id, count, initialized }, dispatch] = useCounterContext()
+  const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
 
-  const increment = () => dispatch(actions.increment())
-  const decrement = () => dispatch(actions.decrement())
+  useEffect(() => {
+    if (loading) {
+      dispatch(fetchStart(), consoleLog)
+    }
+  }, [loading])
+
+  const handleDecrement = useCallback(() => {
+    initialized && !loading && mutation({ variables: { id, count: count - 1 } })
+  }, [id, count, loading])
+
+  const handleIncrement = useCallback(() => {
+    initialized && !loading && mutation({ variables: { id, count: count + 1 } })
+  }, [id, count, loading])
 
   return (
     <>
-      <Button onClick={decrement}>-</Button>
+      <Button onClick={handleDecrement}>-</Button>
       <Count>{initialized ? count : "..."}</Count>
-      <Button onClick={increment}>+</Button>
+      <Button onClick={handleIncrement}>+</Button>
     </>
   )
-}
+})
 
 const Count = styled.span`
   width: 2.5em;
