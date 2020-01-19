@@ -9,8 +9,8 @@ function requestFullscreen() {
 }
 
 async function lock(orientation) {
-  await requestFullscreen().catch(() => false)
-  screen.orientation.lock(orientation)
+  await requestFullscreen()
+  return screen.orientation.lock(orientation)
 }
 
 function handleLockPortrait() {
