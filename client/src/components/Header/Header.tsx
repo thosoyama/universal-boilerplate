@@ -1,19 +1,14 @@
 import React from "react"
 import styled from "styled-components"
-import { useCounterContext } from "~/contexts/CounterContext"
 
 type TProps = {
   children?: React.ReactNode
 }
 
 export const Header: React.FC<TProps> = props => {
-  const [{ count, initialized }] = useCounterContext()
-
   return (
     <Root>
-      <Title>
-        {props?.children || "Demo"} {initialized ? count : "..."}
-      </Title>
+      <Title>{props?.children}</Title>
     </Root>
   )
 }

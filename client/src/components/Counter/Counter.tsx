@@ -3,6 +3,7 @@ import React, { memo, useCallback, useEffect } from "react"
 import styled from "styled-components"
 import { SetCounterDocument, SetCounterMutation } from "~/@types/Graphql"
 import { consoleLog, fetchStart, useCounterContext } from "~/contexts/CounterContext"
+import { Header } from "../Header"
 
 // eslint-disable-next-line react/display-name
 export const Counter: React.FC = memo(() => {

@@ -7,6 +7,16 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     width: 100%;
     height: 100%;
+    color: #333;
+  }
+  a {
+    text-decoration: none;
+  }
+  a:link {
+    color: #334;
+  }
+  a:visited {
+    color: #556;
   }
 `
 
@@ -61,4 +71,17 @@ export const Text = styled.span<{
   font-weight: ${props => props["font-weight"]};
   line-height: ${props => props["line-height"]};
   color: ${props => props.color};
+`
+
+export const FlexRoot = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`
+
+export const FlexBody = styled.div`
+  flex: 1;
 `
