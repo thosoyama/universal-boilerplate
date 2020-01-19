@@ -4,7 +4,7 @@ import { Navigation } from "~/components/Navigation"
 import { Header, Footer, FlexBody, FlexRoot } from "~/components"
 import styled from "styled-components"
 
-const Index: NextPage = () => {
+const index: NextPage = () => {
   return (
     <>
       <Head>
@@ -22,7 +22,7 @@ const Index: NextPage = () => {
   )
 }
 
-export default Index
+export default index
 
 const Content = styled.div`
   margin: 10px;

@@ -2,7 +2,7 @@ import { NextPage } from "next"
 import Head from "next/head"
 import { Footer, Header, Margin, Navigation, Text, FlexRoot, FlexBody } from "~/components"
 
-const About: NextPage = () => (
+const about: NextPage = () => (
   <>
     <Head>
       <title>About</title>
@@ -40,4 +40,4 @@ const About: NextPage = () => (
   </>
 )
 
-export default About
+export default about

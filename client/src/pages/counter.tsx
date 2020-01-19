@@ -17,7 +17,7 @@ const client = new ApolloClient({
   })
 })
 
-const Index: NextPage = () => {
+const counter: NextPage = () => {
   const counterId = "1"
 
   return (
@@ -43,7 +43,7 @@ const Index: NextPage = () => {
   )
 }
 
-export default Index
+export default counter
 
 const Content = styled.div`
   display: flex;
