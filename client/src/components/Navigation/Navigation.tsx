@@ -20,6 +20,11 @@ export const Navigation: React.FC = () => {
           <a>counter</a>
         </Link>
       </List>
+      <List>
+        <Link href="/screen">
+          <a>Screen</a>
+        </Link>
+      </List>
     </Root>
   )
 }
