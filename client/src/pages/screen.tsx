@@ -10,7 +10,7 @@ const screen: NextPage = () => {
         <title>Screen</title>
       </Head>
       <FlexRoot>
-        <Header>Counter</Header>
+        <Header>Screen</Header>
         <Navigation />
         <FlexBody>
           <Content>
