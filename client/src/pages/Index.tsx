@@ -1,8 +1,8 @@
 import { NextPage } from "next"
 import Head from "next/head"
-import { Navigation } from "~/components/Navigation"
-import { Header, Footer, FlexBody, FlexRoot } from "~/components"
 import styled from "styled-components"
+import { FlexBody, FlexRoot, Footer, Header } from "~/components"
+import { Navigation } from "~/components/Navigation"
 
 const index: NextPage = () => {
   return (

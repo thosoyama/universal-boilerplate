@@ -1,6 +1,6 @@
-import React, { memo, useCallback, useEffect } from "react"
-import styled from "styled-components"
 import Link from "next/link"
+import React from "react"
+import styled from "styled-components"
 
 export const Navigation: React.FC = () => {
   return (
@@ -38,5 +38,10 @@ const Root = styled.ul`
   border-bottom: 1px solid #efefef;
 `
 const List = styled.li`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 `

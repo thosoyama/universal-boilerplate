@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import Head from "next/head"
-import { Footer, Header, Margin, Navigation, Text, FlexRoot, FlexBody } from "~/components"
+import { FlexBody, FlexRoot, Footer, Header, Margin, Navigation, Text } from "~/components"
 
 const about: NextPage = () => (
   <>
