@@ -6,23 +6,23 @@ export const Navigation: React.FC = () => {
   return (
     <Root>
       <List>
-        <Link href="/">
-          <a>index</a>
+        <Link href="/" passHref>
+          <StyledLink>index</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/about">
-          <a>about</a>
+        <Link href="/about" passHref>
+          <StyledLink>about</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/counter">
-          <a>counter</a>
+        <Link href="/counter" passHref>
+          <StyledLink>counter</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/screen">
-          <a>Screen</a>
+        <Link href="/screen" passHref>
+          <StyledLink>Screen</StyledLink>
         </Link>
       </List>
     </Root>
@@ -37,11 +37,21 @@ const Root = styled.ul`
   background-color: #f8f8f8;
   border-bottom: 1px solid #efefef;
 `
+
 const List = styled.li`
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
   text-align: center;
+`
+
+const StyledLink = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `
