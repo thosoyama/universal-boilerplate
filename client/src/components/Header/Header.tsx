@@ -1,11 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-type TProps = {
-  children?: React.ReactNode
-}
-
-export const Header: React.FC<TProps> = props => {
+export const Header: React.FC = props => {
   return (
     <Root>
       <Title>{props?.children}</Title>

@@ -1,11 +1,10 @@
 import { useMutation } from "@apollo/react-hooks"
-import React, { memo, useCallback, useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import styled from "styled-components"
 import { SetCounterDocument, SetCounterMutation } from "~/@types/Graphql"
 import { consoleLog, fetchStart, useCounterContext } from "~/contexts/CounterContext"
 
-// eslint-disable-next-line react/display-name
-export const Counter: React.FC = memo(() => {
+export const Counter: React.FC = () => {
   const [{ id, count, initialized }, dispatch] = useCounterContext()
   const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
 
@@ -30,7 +29,7 @@ export const Counter: React.FC = memo(() => {
       <Button onClick={handleIncrement}>+</Button>
     </>
   )
-})
+}
 
 const Count = styled.span`
   width: 2.5em;
