@@ -5,7 +5,6 @@ import { actions, CounterAction } from "~/effects/actions/CounterActions"
 import { applyMiddleware, EnhanceDispatch, logger } from "~/effects/middlewares"
 import { counterReducer } from "~/effects/reducers/CounterReducer"
 
-// state
 export type CounterState = Counter & {
   loading: boolean
   initialized: boolean
@@ -20,17 +19,14 @@ const initialState: Readonly<CounterState> = {
   touched: false
 }
 
-// dispacher
 type CounterDispatch = React.Dispatch<CounterAction>
 
 const initialDispatch: CounterDispatch = () => {
   throw new TypeError("Context not provided.")
 }
 
-// context
 const CounterContext = createContext<[CounterState, CounterDispatch]>([initialState, initialDispatch])
 
-// provider
 type CounterProvidorProps = {
   id: string
 }
@@ -60,7 +56,6 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
   return <CounterContext.Provider value={[state, dispatch]}>{props?.children}</CounterContext.Provider>
 }
 
-// consumer
 export const useCounterContext = () => {
   return useContext<[CounterState, EnhanceDispatch<CounterAction>]>(CounterContext)
 }
