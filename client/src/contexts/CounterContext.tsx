@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/react-hooks"
-import React, { createContext, memo, useContext, useEffect, useReducer } from "react"
+import React, { createContext, useContext, useEffect, useReducer } from "react"
 import { Counter, GetCounterDocument, GetCounterQuery } from "~/@types/Graphql"
+import { applyMiddleware, EnhanceDispatch, logger } from "~/middlewares"
 
 // state
 type CounterState = Counter & {
@@ -77,51 +78,31 @@ const counterReducer: React.Reducer<CounterState, CounterAction> = (state, actio
   }
 }
 
-// middleware
-type CounterMiddleWare = (action: CounterAction) => Promise<any>
-
-export const consoleLog = async action => {
-  console.log(action)
-}
-
-// dispachers
-type EnhanceDispatch<T, U> = (action: T, middleware?: U) => void
-
+// dispacher
 type CounterDispatch = React.Dispatch<CounterAction>
-type EnhanceCounterDispatch = EnhanceDispatch<CounterAction, CounterMiddleWare>
 
 const initialDispatch: CounterDispatch = () => {
   throw new TypeError("Context not provided.")
 }
 
-const enhanceDispatch = (dispatch: CounterDispatch): EnhanceCounterDispatch => {
-  return (action, middleware?) => {
-    if (middleware) {
-      middleware(action).then(() => dispatch(action))
-    } else {
-      dispatch(action)
-    }
-  }
-}
-
-// contexts
+// context
 const CounterContext = createContext<[CounterState, CounterDispatch]>([initialState, initialDispatch])
 
 // provider
 type CounterProvidorProps = {
   id: string
 }
-export const CounterProvidor: React.FC<CounterProvidorProps> = memo(props => {
+export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
   const { id } = props
-  const [state, dispatch] = useReducer(counterReducer, initialState)
+  const [state, _dispatch] = useReducer(counterReducer, initialState)
   const { data, error, loading } = useQuery<GetCounterQuery>(GetCounterDocument, {
     variables: { id }
   })
-  const enhancedDispatch = enhanceDispatch(dispatch)
+  const dispatch = applyMiddleware(state, _dispatch)(logger)
 
   useEffect(() => {
     if (loading) {
-      enhancedDispatch(fetchStart(), consoleLog)
+      dispatch(fetchStart())
     }
   }, [loading])
 
@@ -130,14 +111,14 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = memo(props => {
       throw error
     }
     if (data && data.counter) {
-      enhancedDispatch(fetchEnd(id, data.counter.count), consoleLog)
+      dispatch(fetchEnd(id, data.counter.count))
     }
   }, [data, error])
 
-  return <CounterContext.Provider value={[state, enhancedDispatch]}>{props?.children}</CounterContext.Provider>
-})
+  return <CounterContext.Provider value={[state, dispatch]}>{props?.children}</CounterContext.Provider>
+}
 
 // hooks
-export const useCounterContext = (): [CounterState, EnhanceCounterDispatch] => {
-  return useContext(CounterContext)
+export const useCounterContext = () => {
+  return useContext<[CounterState, EnhanceDispatch<CounterAction>]>(CounterContext)
 }
