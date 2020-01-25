@@ -2,7 +2,8 @@ import { useMutation } from "@apollo/react-hooks"
 import React, { useCallback, useEffect } from "react"
 import styled from "styled-components"
 import { SetCounterDocument, SetCounterMutation } from "~/@types/Graphql"
-import { fetchStart, useCounterContext } from "~/contexts/CounterContext"
+import { actions } from "~/effects/actions/CounterActions"
+import { useCounterContext } from "~/effects/contexts/CounterContext"
 
 export const Counter: React.FC = () => {
   const [{ id, count, initialized }, dispatch] = useCounterContext()
@@ -10,7 +11,7 @@ export const Counter: React.FC = () => {
 
   useEffect(() => {
     if (loading) {
-      dispatch(fetchStart())
+      dispatch(actions.fetchStart())
     }
   }, [loading])
 

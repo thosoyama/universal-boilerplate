@@ -7,7 +7,7 @@ import { NextPage } from "next"
 import Head from "next/head"
 import styled from "styled-components"
 import { Counter, FlexBody, FlexRoot, Footer, Header, Navigation } from "~/components"
-import { CounterProvidor } from "~/contexts/CounterContext"
+import { CounterProvidor } from "~/effects/contexts/CounterContext"
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
