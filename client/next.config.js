@@ -5,5 +5,8 @@ module.exports = {
       "~": require("path").resolve(__dirname, "src")
     }
     return config
+  },
+  devIndicators: {
+    autoPrerender: false
   }
 }
