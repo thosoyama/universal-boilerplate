@@ -1,17 +1,25 @@
+import { useMemo } from "react"
 import { compose } from "~/libs/compose"
 
-export type MiddlewareBehaviour<A> = (action: Readonly<A>) => Promise<void>
-
-export type Middleware<S, A> = (value: {
+type MiddlewareAPI<S, A> = {
   state: Readonly<S>
-  dispatch: React.Dispatch<A>
-}) => (next: React.Dispatch<A> | MiddlewareBehaviour<A>) => MiddlewareBehaviour<A>
+  dispatch: React.Dispatch<Readonly<A>>
+}
+
+type MiddlewareBehaviour<A> = (action: Readonly<A>) => Promise<void>
+
+export type Middleware<S, A> = (
+  api: MiddlewareAPI<S, A>
+) => (next: MiddlewareBehaviour<A> | React.Dispatch<A>) => MiddlewareBehaviour<A>
 
 export type EnhanceDispatch<A> = (action: Readonly<A>) => void
 
-export const applyMiddleware = <S, A>(state: S, dispatch: React.Dispatch<A>) => {
-  return (...middlewares: Middleware<S, A>[]): EnhanceDispatch<A> => {
-    const chain = middlewares.map(middleware => middleware({ state, dispatch }))
-    return compose(...chain)(dispatch)
-  }
+export const applyMiddleware = <S, A>(
+  api: MiddlewareAPI<S, A>,
+  ...middlewares: Middleware<S, A>[]
+): EnhanceDispatch<A> => {
+  return useMemo(() => {
+    const chain = middlewares.map(middleware => middleware(api))
+    return compose(...chain)(api.dispatch)
+  }, [])
 }

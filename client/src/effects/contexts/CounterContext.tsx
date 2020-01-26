@@ -33,15 +33,15 @@ type CounterProvidorProps = {
 }
 export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
   const { id } = props
-  const [state, _dispatch] = useReducer(CounterReducer, initialState)
+  const [state, dispatch] = useReducer(CounterReducer, initialState)
   const { data, error, loading } = useQuery<GetCounterQuery>(GetCounterDocument, {
     variables: { id }
   })
-  const dispatch = applyMiddleware(state, _dispatch)(logger, saveStorage)
+  const enhancedDispatch = applyMiddleware({ state, dispatch }, logger, saveStorage)
 
   useEffect(() => {
     if (loading) {
-      dispatch(actions.fetchStart())
+      enhancedDispatch(actions.fetchStart())
     }
   }, [loading])
 
@@ -50,11 +50,11 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
       throw error
     }
     if (data && data.counter) {
-      dispatch(actions.fetchEnd(id, data.counter.count))
+      enhancedDispatch(actions.fetchEnd(id, data.counter.count))
     }
   }, [data, error])
 
-  return <CounterContext.Provider value={[state, dispatch]}>{props?.children}</CounterContext.Provider>
+  return <CounterContext.Provider value={[state, enhancedDispatch]}>{props?.children}</CounterContext.Provider>
 }
 
 export const useCounterContext = () => {
