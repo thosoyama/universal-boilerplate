@@ -1,10 +1,11 @@
 import { compose } from "~/libs/compose"
 
-type MiddlewareAction<A> = (action: Readonly<A>) => Promise<void>
+export type MiddlewareBehaviour<A> = (action: Readonly<A>) => Promise<void>
 
-type MiddlewareDispatch<A> = (next: React.Dispatch<A>) => MiddlewareAction<A>
-
-export type Middleware<S, A> = (api: { state: Readonly<S>; dispatch: React.Dispatch<A> }) => MiddlewareDispatch<A>
+export type Middleware<S, A> = (value: {
+  state: Readonly<S>
+  dispatch: React.Dispatch<A>
+}) => (next: React.Dispatch<A> | MiddlewareBehaviour<A>) => MiddlewareBehaviour<A>
 
 export type EnhanceDispatch<A> = (action: Readonly<A>) => void
 
