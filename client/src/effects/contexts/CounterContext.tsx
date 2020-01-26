@@ -2,8 +2,9 @@ import { useQuery } from "@apollo/react-hooks"
 import React, { createContext, useContext, useEffect, useReducer } from "react"
 import { Counter, GetCounterDocument, GetCounterQuery } from "~/@types/Graphql"
 import { actions, CounterAction } from "~/effects/actions/CounterActions"
-import { applyMiddleware, EnhanceDispatch, logger } from "~/effects/middlewares"
-import { counterReducer } from "~/effects/reducers/CounterReducer"
+import { logger, saveStorage } from "~/effects/middlewares/CounterMiddleware"
+import { CounterReducer } from "~/effects/reducers/CounterReducer"
+import { applyMiddleware, EnhanceDispatch } from "~/libs/applyMiddleware"
 
 export type CounterState = Counter & {
   loading: boolean
@@ -32,11 +33,11 @@ type CounterProvidorProps = {
 }
 export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
   const { id } = props
-  const [state, _dispatch] = useReducer(counterReducer, initialState)
+  const [state, _dispatch] = useReducer(CounterReducer, initialState)
   const { data, error, loading } = useQuery<GetCounterQuery>(GetCounterDocument, {
     variables: { id }
   })
-  const dispatch = applyMiddleware(state, _dispatch)(logger)
+  const dispatch = applyMiddleware(state, _dispatch)(logger, saveStorage)
 
   useEffect(() => {
     if (loading) {
