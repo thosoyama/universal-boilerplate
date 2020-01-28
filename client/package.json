@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next",
-    "build": "rm -rf out ../docs && next build && next export && mv out ../docs",
+    "build": "rm -rf out ../docs && next build && next export && touch out/.nojekyll && mv out ../docs",
     "lint": "eslint --fix --ext ts,tsx src",
     "tsc": "tsc --noEmit",
     "codegen": "graphql-codegen"
