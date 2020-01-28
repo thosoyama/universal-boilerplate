@@ -6,22 +6,22 @@ export const Navigation: React.FC = () => {
   return (
     <Root>
       <List>
-        <Link href="/" passHref>
+        <Link href="./" passHref>
           <StyledLink>index</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/about" passHref>
+        <Link href="./about" passHref>
           <StyledLink>about</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/counter" passHref>
+        <Link href="./counter" passHref>
           <StyledLink>counter</StyledLink>
         </Link>
       </List>
       <List>
-        <Link href="/screen" passHref>
+        <Link href="./screen" passHref>
           <StyledLink>Screen</StyledLink>
         </Link>
       </List>
