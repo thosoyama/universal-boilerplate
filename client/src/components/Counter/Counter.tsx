@@ -7,11 +7,7 @@ export const Counter: React.FC = () => {
   const { usehandle } = useCounterDispatch()
   const { decrement, increment } = usehandle()
 
-  if (!called || loading) {
-    return null
-  }
-
-  return (
+  return !called || loading ? null : (
     <>
       <Button onClick={decrement}>-</Button>
       <Count>{count}</Count>
