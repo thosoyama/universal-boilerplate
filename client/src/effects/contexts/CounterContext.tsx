@@ -13,7 +13,7 @@ import { logger, saveStorage } from "~/effects/middlewares/CounterMiddleware"
 import { CounterReducer } from "~/effects/reducers/CounterReducer"
 import { applyMiddleware, EnhanceDispatch } from "~/libs/applyMiddleware"
 
-export type CounterQueryFlatResult = Omit<Counter, "__typename"> & Pick<GetCounterQueryResult, "loading" | "called">
+export type CounterQueryFlatResult = Pick<Counter, "id" | "count"> & Pick<GetCounterQueryResult, "loading" | "called">
 export type CounterState = CounterQueryFlatResult
 
 const initialState: Readonly<CounterState> = {
@@ -23,7 +23,7 @@ const initialState: Readonly<CounterState> = {
   called: false
 }
 
-const useHandles = (id: string, count: number) => {
+const useHandles = (id: Counter["id"], count: Counter["count"]) => {
   const [mutation, { loading: mutationLoading }] = useMutation<SetCounterMutation>(SetCounterDocument)
 
   const handleDecrement = useCallback(() => {
@@ -81,6 +81,6 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
   return <CounterContext.Provider value={[state, dispatchs]}>{props?.children}</CounterContext.Provider>
 }
 
-export const useCounterContext = () => {
-  return useContext<[CounterState, CounterDispatch]>(CounterContext)
+export const useCounterContext = (): [CounterState, CounterDispatch] => {
+  return useContext(CounterContext)
 }
