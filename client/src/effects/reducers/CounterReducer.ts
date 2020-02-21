@@ -3,36 +3,14 @@ import { CounterState } from "~/effects/contexts/CounterContext"
 
 export const CounterReducer: React.Reducer<CounterState, CounterAction> = (state, action) => {
   switch (action.type) {
-    case ACTION_TYPE.FETCH_START: {
+    case ACTION_TYPE.FETCH_QUERY: {
       return {
         ...state,
-        loading: true
-      }
-    }
-    case ACTION_TYPE.FETCH_END: {
-      return {
-        ...state,
-        ...action.payload,
-        loading: false,
-        initialized: true
-      }
-    }
-    case ACTION_TYPE.INCREMENT: {
-      return {
-        ...state,
-        count: state.count + 1,
-        touched: true
-      }
-    }
-    case ACTION_TYPE.DECREMENT: {
-      return {
-        ...state,
-        count: state.count - 1,
-        touched: true
+        ...action.payload
       }
     }
     default: {
-      return state
+      throw new Error(`Invalid action type [${action.type}]`)
     }
   }
 }

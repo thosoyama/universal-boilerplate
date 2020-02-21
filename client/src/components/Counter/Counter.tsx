@@ -1,32 +1,19 @@
-import { useMutation } from "@apollo/react-hooks"
-import React, { useCallback, useEffect } from "react"
+import React from "react"
 import styled from "styled-components"
-import { SetCounterDocument, SetCounterMutation } from "~/@types/Graphql"
-import { actions } from "~/effects/actions/CounterActions"
 import { useCounterContext } from "~/effects/contexts/CounterContext"
 
 export const Counter: React.FC = () => {
-  const [{ id, count, initialized }, dispatch] = useCounterContext()
-  const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
+  const [{ id, count, loading: queryLoading, called: queryCalled }, { useHandles }] = useCounterContext()
+  const [handleDecrement, handleIncrement] = useHandles(id, count)
 
-  useEffect(() => {
-    if (loading) {
-      dispatch(actions.fetchStart())
-    }
-  }, [loading])
-
-  const handleDecrement = useCallback(() => {
-    initialized && !loading && mutation({ variables: { id, count: count - 1 } })
-  }, [id, count, loading])
-
-  const handleIncrement = useCallback(() => {
-    initialized && !loading && mutation({ variables: { id, count: count + 1 } })
-  }, [id, count, loading])
+  if (!queryCalled || queryLoading) {
+    return null
+  }
 
   return (
     <>
       <Button onClick={handleDecrement}>-</Button>
-      <Count>{initialized ? count : "..."}</Count>
+      <Count>{count}</Count>
       <Button onClick={handleIncrement}>+</Button>
     </>
   )
