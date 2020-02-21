@@ -24,15 +24,15 @@ const initialState: Readonly<CounterState> = {
 }
 
 const useHandles = (id: Counter["id"], count: Counter["count"]) => {
-  const [mutation, { loading: mutationLoading }] = useMutation<SetCounterMutation>(SetCounterDocument)
+  const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
 
   const handleDecrement = useCallback(() => {
-    !mutationLoading && mutation({ variables: { id, count: count - 1 } })
-  }, [id, count, mutationLoading])
+    !loading && mutation({ variables: { id, count: count - 1 } })
+  }, [id, count, loading])
 
   const handleIncrement = useCallback(() => {
-    !mutationLoading && mutation({ variables: { id, count: count + 1 } })
-  }, [id, count, mutationLoading])
+    !loading && mutation({ variables: { id, count: count + 1 } })
+  }, [id, count, loading])
 
   return [handleDecrement, handleIncrement] as const
 }
