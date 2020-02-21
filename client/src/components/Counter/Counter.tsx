@@ -3,10 +3,10 @@ import styled from "styled-components"
 import { useCounterContext } from "~/effects/contexts/CounterContext"
 
 export const Counter: React.FC = () => {
-  const [{ id, count, loading: queryLoading, called: queryCalled }, { useHandles }] = useCounterContext()
+  const [{ id, count, loading, called }, { useHandles }] = useCounterContext()
   const [handleDecrement, handleIncrement] = useHandles(id, count)
 
-  if (!queryCalled || queryLoading) {
+  if (!called || loading) {
     return null
   }
 
