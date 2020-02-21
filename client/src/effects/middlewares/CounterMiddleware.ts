@@ -5,9 +5,10 @@ import { Middleware } from "~/libs/applyMiddleware"
 export const logger: Middleware<CounterState, CounterAction> = ({ state }) => next => async action => {
   switch (action.type) {
     case ACTION_TYPE.FETCH_QUERY: {
+      const { loading, count } = action.payload
       console.log(`${action.type}:`, {
-        loading: action.payload.loading,
-        count: `${state.count} -> ${action.payload.count}`
+        loading,
+        count: `${state.count} -> ${count}`
       })
       break
     }

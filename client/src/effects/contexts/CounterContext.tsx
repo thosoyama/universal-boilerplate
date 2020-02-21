@@ -8,13 +8,13 @@ import {
   SetCounterDocument,
   SetCounterMutation
 } from "~/@types/Graphql"
-import { actions, CounterAction } from "~/effects/actions/CounterActions"
+import { CounterAction, fetchQuery } from "~/effects/actions/CounterActions"
 import { logger, saveStorage } from "~/effects/middlewares/CounterMiddleware"
 import { CounterReducer } from "~/effects/reducers/CounterReducer"
 import { applyMiddleware, EnhanceDispatch } from "~/libs/applyMiddleware"
 
-export type CounterQueryFlatResult = Pick<Counter, "id" | "count"> & Pick<GetCounterQueryResult, "loading" | "called">
-export type CounterState = CounterQueryFlatResult
+// state
+export type CounterState = Pick<Counter, "id" | "count"> & Pick<GetCounterQueryResult, "loading" | "called">
 
 const initialState: Readonly<CounterState> = {
   id: "0",
@@ -23,54 +23,64 @@ const initialState: Readonly<CounterState> = {
   called: false
 }
 
-const useHandles = (id: Counter["id"], count: Counter["count"]) => {
-  const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
+const CounterStateContext = createContext<CounterState>(initialState)
 
-  const handleDecrement = useCallback(() => {
+export const useCounterState = () => {
+  return useContext(CounterStateContext)
+}
+
+// dispatch
+const usehandle = () => {
+  const { id, count } = useCounterState()
+  const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
+  const decrement = useCallback(() => {
     !loading && mutation({ variables: { id, count: count - 1 } })
   }, [id, count, loading])
-
-  const handleIncrement = useCallback(() => {
+  const increment = useCallback(() => {
     !loading && mutation({ variables: { id, count: count + 1 } })
   }, [id, count, loading])
 
-  return [handleDecrement, handleIncrement] as const
+  return {
+    decrement,
+    increment
+  } as const
 }
 
 type CounterDispatch = {
-  useHandles: typeof useHandles
+  usehandle: typeof usehandle
   dispatch: EnhanceDispatch<CounterAction>
 }
 
-const initialDispatch: CounterDispatch = {
-  useHandles: () => [() => undefined, () => undefined],
+const initialDispatch: Readonly<CounterDispatch> = {
+  usehandle,
   dispatch: () => {
     throw new TypeError("Context not provided.")
   }
 }
 
-const CounterContext = createContext<[CounterState, CounterDispatch]>([initialState, initialDispatch])
+const CounterDispatchContext = createContext<CounterDispatch>(initialDispatch)
 
+export const useCounterDispatch = () => {
+  return useContext(CounterDispatchContext)
+}
+
+// providor
 type CounterProvidorProps = {
   id: string
 }
-export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
-  const { id } = props
+
+const useReducerWithMiddleware = () => {
   const [state, dispatch] = useReducer(CounterReducer, initialState)
+  return [state, applyMiddleware({ state, dispatch }, logger, saveStorage)] as const
+}
+
+export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }) => {
+  const [state, dispatch] = useReducerWithMiddleware()
   const { data, error, loading, called } = useQuery<GetCounterQuery>(GetCounterDocument, {
     variables: { id }
   })
-  const enhancedDispatch = applyMiddleware({ state, dispatch }, logger, saveStorage)
-  const dispatchs: CounterDispatch = {
-    dispatch: enhancedDispatch,
-    useHandles
-  }
-  const contextValues: [CounterState, CounterDispatch] = useMemo(() => [state, dispatchs], [
-    state.id,
-    state.count,
-    state.loading,
-    state.called
-  ])
+  const stateProvidorValue = useMemo(() => state, [state.id, state.count, state.loading, state.called])
+  const dispatchProvidorValue = useMemo(() => ({ ...initialDispatch, dispatch }), [dispatch])
 
   useEffect(() => {
     if (error) {
@@ -80,13 +90,12 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = props => {
       ...initialState,
       ...data?.counter
     }
-    const action = actions.fetchQuery({ id, count, loading, called })
-    enhancedDispatch(action)
+    dispatch(fetchQuery({ id, count, loading, called }))
   }, [data, error, loading, called])
 
-  return <CounterContext.Provider value={contextValues}>{props.children}</CounterContext.Provider>
-}
-
-export const useCounterContext = (): [CounterState, CounterDispatch] => {
-  return useContext(CounterContext)
+  return (
+    <CounterStateContext.Provider value={stateProvidorValue}>
+      <CounterDispatchContext.Provider value={dispatchProvidorValue}>{children}</CounterDispatchContext.Provider>
+    </CounterStateContext.Provider>
+  )
 }

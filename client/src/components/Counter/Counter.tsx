@@ -1,10 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import { useCounterContext } from "~/effects/contexts/CounterContext"
+import { useCounterDispatch, useCounterState } from "~/effects/contexts/CounterContext"
 
 export const Counter: React.FC = () => {
-  const [{ id, count, loading, called }, { useHandles }] = useCounterContext()
-  const [handleDecrement, handleIncrement] = useHandles(id, count)
+  const { count, loading, called } = useCounterState()
+  const { usehandle } = useCounterDispatch()
+  const { decrement, increment } = usehandle()
 
   if (!called || loading) {
     return null
@@ -12,9 +13,9 @@ export const Counter: React.FC = () => {
 
   return (
     <>
-      <Button onClick={handleDecrement}>-</Button>
+      <Button onClick={decrement}>-</Button>
       <Count>{count}</Count>
-      <Button onClick={handleIncrement}>+</Button>
+      <Button onClick={increment}>+</Button>
     </>
   )
 }
