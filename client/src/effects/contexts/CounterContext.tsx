@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from "react"
+import React, { createContext, useCallback, useContext, useEffect, useReducer } from "react"
 import {
   Counter,
   GetCounterDocument,
@@ -58,10 +58,7 @@ const useReducerWithMiddleware = () => {
 
 export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }) => {
   const [state, dispatch] = useReducerWithMiddleware()
-  const { data, error, loading, called } = useQuery<GetCounterQuery>(GetCounterDocument, {
-    variables: { id }
-  })
-  const stateProvidorValue = useMemo(() => state, [state.id, state.count, state.loading, state.called])
+  const { data, error, loading, called } = useQuery<GetCounterQuery>(GetCounterDocument, { variables: { id } })
 
   useEffect(() => {
     if (error) {
@@ -74,5 +71,5 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }
     dispatch(fetchQuery({ id, count, loading, called }))
   }, [data, error, loading, called])
 
-  return <CounterStateContext.Provider value={stateProvidorValue}>{children}</CounterStateContext.Provider>
+  return <CounterStateContext.Provider value={state}>{children}</CounterStateContext.Provider>
 }
