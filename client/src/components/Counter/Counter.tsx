@@ -1,13 +1,12 @@
 import React from "react"
 import styled from "styled-components"
-import { useCounterDispatch, useCounterState } from "~/effects/contexts/CounterContext"
+import { useCounterHandle, useCounterState } from "~/effects/contexts/CounterContext"
 
 const MemoizeCount = React.memo<{ count: number }>(({ count }) => <Count>{count}</Count>)
 
 export const Counter: React.FC = () => {
   const { count, loading, called } = useCounterState()
-  const { usehandle } = useCounterDispatch()
-  const { decrement, increment } = usehandle()
+  const { decrement, increment } = useCounterHandle()
 
   return !called || loading ? null : (
     <>

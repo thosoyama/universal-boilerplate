@@ -29,8 +29,8 @@ export const useCounterState = () => {
   return useContext(CounterStateContext)
 }
 
-// dispatch
-const usehandle = () => {
+// mutation
+export const useCounterHandle = () => {
   const { id, count } = useCounterState()
   const [mutation, { loading }] = useMutation<SetCounterMutation>(SetCounterDocument)
   const decrement = useCallback(() => {
@@ -44,24 +44,6 @@ const usehandle = () => {
     decrement,
     increment
   } as const
-}
-
-type CounterDispatch = {
-  usehandle: typeof usehandle
-  dispatch: EnhanceDispatch<CounterAction>
-}
-
-const initialDispatch: Readonly<CounterDispatch> = {
-  usehandle,
-  dispatch: () => {
-    throw new TypeError("Context not provided.")
-  }
-}
-
-const CounterDispatchContext = createContext<CounterDispatch>(initialDispatch)
-
-export const useCounterDispatch = () => {
-  return useContext(CounterDispatchContext)
 }
 
 // providor
@@ -80,7 +62,6 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }
     variables: { id }
   })
   const stateProvidorValue = useMemo(() => state, [state.id, state.count, state.loading, state.called])
-  const dispatchProvidorValue = useMemo(() => ({ ...initialDispatch, dispatch }), [dispatch])
 
   useEffect(() => {
     if (error) {
@@ -93,9 +74,5 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }
     dispatch(fetchQuery({ id, count, loading, called }))
   }, [data, error, loading, called])
 
-  return (
-    <CounterStateContext.Provider value={stateProvidorValue}>
-      <CounterDispatchContext.Provider value={dispatchProvidorValue}>{children}</CounterDispatchContext.Provider>
-    </CounterStateContext.Provider>
-  )
+  return <CounterStateContext.Provider value={stateProvidorValue}>{children}</CounterStateContext.Provider>
 }
