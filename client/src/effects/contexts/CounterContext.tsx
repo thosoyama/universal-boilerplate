@@ -8,10 +8,10 @@ import {
   SetCounterDocument,
   SetCounterMutation
 } from "~/@types/Graphql"
-import { CounterAction, fetchQuery } from "~/effects/actions/CounterActions"
+import { fetchQuery } from "~/effects/actions/CounterActions"
 import { logger, saveStorage } from "~/effects/middlewares/CounterMiddleware"
 import { CounterReducer } from "~/effects/reducers/CounterReducer"
-import { applyMiddleware, EnhanceDispatch } from "~/libs/applyMiddleware"
+import { applyMiddleware } from "~/libs/applyMiddleware"
 
 // state
 export type CounterState = Pick<Counter, "id" | "count"> & Pick<GetCounterQueryResult, "loading" | "called">
