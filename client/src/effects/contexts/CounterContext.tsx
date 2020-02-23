@@ -64,12 +64,9 @@ export const CounterProvidor: React.FC<CounterProvidorProps> = ({ id, children }
     if (error) {
       throw error
     }
-    const { id, count } = {
-      ...initialState,
-      ...data?.counter
-    }
+    const { id, count } = data?.counter ? data.counter : initialState
     dispatch(fetchQuery({ id, count, loading, called }))
-  }, [data, error, loading, called])
+  }, [id, data, error, loading, called])
 
   return <CounterStateContext.Provider value={state}>{children}</CounterStateContext.Provider>
 }
