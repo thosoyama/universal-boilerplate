@@ -21,5 +21,5 @@ export const applyMiddleware = <S, A>(
   return useMemo(() => {
     const chain = middlewares.map(middleware => middleware(api))
     return compose(...chain)(api.dispatch)
-  }, [])
+  }, [api.state])
 }
