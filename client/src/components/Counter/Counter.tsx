@@ -1,20 +1,31 @@
 import React from "react"
 import styled from "styled-components"
-import { useCounterHandle, useCounterState } from "~/effects/contexts/CounterContext"
+import { useCounterHandle } from "~/effects/contexts/CounterContext"
 
-const MemoizeCount = React.memo<{ count: number }>(({ count }) => <Count>{count}</Count>)
+type CounterProps = {
+  count: number | undefined
+  loading: boolean
+  handleDecrement: () => void
+  handleIncrement: () => void
+  handleReset: () => void
+}
 
-export const Counter: React.FC = () => {
-  const { count, loading, called } = useCounterState()
-  const { decrement, increment } = useCounterHandle()
-
-  return !called || loading ? null : (
+const PureCounter = React.memo<CounterProps>(({ count, handleDecrement, handleIncrement, handleReset }) => {
+  if (typeof count !== "number") {
+    return <div>Now Loading ...</div>
+  }
+  return (
     <>
-      <Button onClick={decrement}>-</Button>
-      <MemoizeCount count={count} />
-      <Button onClick={increment}>+</Button>
+      <Button onClick={handleDecrement}>-</Button>
+      <Count>{count}</Count>
+      <Button onClick={handleIncrement}>+</Button>
+      <ResetButton onClick={handleReset}>RESET</ResetButton>
     </>
   )
+})
+
+export const Counter: React.FC = () => {
+  return <PureCounter {...useCounterHandle()} />
 }
 
 const Count = styled.span`
@@ -30,4 +41,8 @@ const Button = styled.button`
   border: 1px solid #ccc;
   font-size: 10px;
   font-weight: bold;
+`
+
+const ResetButton = styled(Button)`
+  margin-left: 10px;
 `
