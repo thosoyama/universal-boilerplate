@@ -1,6 +1,6 @@
 import { ExecutionResult, MutationFunctionOptions, OperationVariables } from "@apollo/react-common"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import React, { createContext, useContext, useEffect, useReducer } from "react"
+import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react"
 import {
   Counter,
   GetCounterDocument,
@@ -52,7 +52,8 @@ const CounterMutationResultContext = createContext<SetCounterMutationResult>({
 // enhance useReducer
 const useReducerWithMiddleware = () => {
   const [state, dispatch] = useReducer(CounterReducer, initialCounterState)
-  return [state, applyMiddleware(state, dispatch, logger, saveStorage)] as const
+  const enhanceDispatch = useMemo(() => applyMiddleware(state, dispatch, [logger, saveStorage]), [state])
+  return [state, enhanceDispatch] as const
 }
 
 // providers

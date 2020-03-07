@@ -2,7 +2,9 @@ import { ACTION_TYPE, CounterAction } from "~/effects/actions/CounterActions"
 import { CounterState } from "~/effects/contexts/CounterContext"
 import { Middleware } from "~/libs/applyMiddleware"
 
-export const logger: Middleware<CounterState, CounterAction> = async (state, action) => {
+type CounterMiddleware = Middleware<CounterAction, CounterState>
+
+export const logger: CounterMiddleware = async (action, state) => {
   switch (action.type) {
     case ACTION_TYPE.QUERY: {
       const { count } = action.payload
@@ -21,7 +23,7 @@ export const logger: Middleware<CounterState, CounterAction> = async (state, act
   }
 }
 
-export const saveStorage: Middleware<CounterState, CounterAction> = async (state, action) => {
+export const saveStorage: CounterMiddleware = async action => {
   switch (action.type) {
     case ACTION_TYPE.QUERY: {
       localStorage.setItem("count", `${action.payload.count}`)

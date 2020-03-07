@@ -1,12 +1,10 @@
-import { useMemo } from "react"
-
-export type Middleware<S, A> = (state: S, action: A) => Promise<void>
+export type Middleware<A, S> = (action: A, state: S) => Promise<void>
 export type EnhanceDispatch<A> = (action: A) => void
 
-export const applyMiddleware = <S, A>(
+export const applyMiddleware = <A, S>(
   state: S,
   dispatch: React.Dispatch<A>,
-  ...middlewares: Middleware<S, A>[]
+  middlewares: Middleware<A, S>[]
 ): EnhanceDispatch<A> => {
-  return useMemo(() => action => middlewares.map(middleware => middleware(state, action)) && dispatch(action), [state])
+  return action => middlewares.map(middleware => middleware(action, state)) && dispatch(action)
 }
