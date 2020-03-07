@@ -52,7 +52,7 @@ const CounterMutationResultContext = createContext<SetCounterMutationResult>({
 // enhance useReducer
 const useReducerWithMiddleware = () => {
   const [state, dispatch] = useReducer(CounterReducer, initialCounterState)
-  return [state, applyMiddleware({ state, dispatch }, logger, saveStorage)] as const
+  return [state, applyMiddleware(state, dispatch, logger, saveStorage)] as const
 }
 
 // providers
